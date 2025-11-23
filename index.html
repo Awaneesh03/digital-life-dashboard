@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Digital Life Dashboard - A personal productivity app for students to manage tasks, habits, notes, and expenses.">
+    <title>Digital Life Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/dashboard-modern.css">
+    <link rel="stylesheet" href="assets/css/budgets.css">
+    <link rel="stylesheet" href="assets/css/goals.css">
+    <link rel="stylesheet" href="assets/css/split.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+</head>
+
+<!-- ... (rest of body) ... -->
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+<script src="assets/js/supabaseClient.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/tasks.js"></script>
+<script src="assets/js/habits.js"></script>
+<script src="assets/js/notes.js"></script>
+<script src="assets/js/expenses.js"></script>
+<script src="assets/js/dashboard.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+
+</html>
+
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="landing-page">
+        <header class="landing-header">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>DigitalLife</span>
+            </div>
+            <nav class="landing-nav">
+                <!-- Navigation items removed for simplicity as per plan -->
+            </nav>
+            <div class="landing-auth-btns">
+                <button id="landing-login-btn" class="btn btn-primary btn-small">Log In</button>
+            </div>
+        </header>
+
+        <section class="hero-section">
+            <div class="hero-content-centered">
+                <h1>Your Digital Life,<br>Organized.</h1>
+                <p>Track tasks, habits, and expenses in one premium dashboard. <br>Designed for students who want to get
+                    things done.</p>
+
+                <div class="hero-actions">
+                    <button id="hero-cta-btn" class="btn btn-primary btn-lg">
+                        Start <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feature Preview Cards -->
+            <div class="landing-features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon green"><i class="fas fa-check-circle"></i></div>
+                    <h3>Tasks</h3>
+                    <p>Stay on top of your assignments and projects with ease.</p>
+                </div>
+                <div class="feature-card purple">
+                    <div class="feature-icon purple"><i class="fas fa-fire"></i></div>
+                    <h3>Habits</h3>
+                    <p>Build lasting streaks and track your daily progress.</p>
+                </div>
+                <div class="feature-card orange">
+                    <div class="feature-icon orange"><i class="fas fa-wallet"></i></div>
+                    <h3>Expenses</h3>
+                    <p>Manage your budget and track every penny you spend.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Authentication Screens -->
+    <div id="auth-container" class="auth-container" style="display: none;">
+        <!-- Login Screen -->
+        <div id="login-screen" class="auth-screen active">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>Digital Life Dashboard</h1>
+                    <p>Organize your student life efficiently</p>
+                </div>
+
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input type="email" id="login-email" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+
+                    <div class="form-group" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="remember-me" style="width: auto; margin: 0;">
+                        <label for="remember-me" style="margin: 0; font-size: 0.9rem; cursor: pointer;">
+                            Remember me for 30 days
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>OR</span>
+                </div>
+
+                <button id="google-login-btn" class="btn btn-google">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Screen -->
+        <div id="signup-screen" class="auth-screen">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <i class="fas fa-user-plus"></i>
+                    <h1>Create Account</h1>
+                    <p>Join Digital Life Dashboard</p>
+                </div>
+
+                <form id="signup-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="signup-email">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input type="email" id="signup-email" required placeholder="your@email.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-password">
+                            <i class="fas fa-lock"></i> Password
+                        </label>
+                        <input type="password" id="signup-password" required placeholder="••••••••" minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-password-confirm">
+                            <i class="fas fa-lock"></i> Confirm Password
+                        </label>
+                        <input type="password" id="signup-password-confirm" required placeholder="••••••••"
+                            minlength="6">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>OR</span>
+                </div>
+
+                <button id="google-signup-btn" class="btn btn-google">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboard-container" class="dashboard-container" style="display: none;">
+        <!-- Top Navbar -->
+        <nav class="top-navbar">
+            <!-- Logo -->
+            <a href="#" class="navbar-logo" onclick="window.switchModule('dashboard-home'); return false;">
+                <i class="fas fa-chart-line"></i>
+                <span>DigitalLife</span>
+            </a>
+
+            <!-- Navigation Tabs -->
+            <div class="navbar-tabs">
+                <button class="navbar-tab active" data-module="dashboard-home"
+                    onclick="window.switchModule('dashboard-home')">
+                    Dashboard
+                </button>
+                <div class="features-dropdown">
+                    <button class="navbar-tab" id="show-features-btn">
+                        Show Features <i class="fas fa-chevron-down"
+                            style="font-size: 0.8rem; margin-left: 0.25rem;"></i>
+                    </button>
+                    <div class="features-dropdown-menu" id="features-menu">
+                        <a href="#" class="dropdown-item" data-module="tasks"
+                            onclick="window.switchModule('tasks'); closeFeatures(); return false;">
+                            <i class="fas fa-tasks"></i>
+                            <span>Tasks</span>
+                        </a>
+                        <a href="#" class="dropdown-item" data-module="habits"
+                            onclick="window.switchModule('habits'); closeFeatures(); return false;">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Habits</span>
+                        </a>
+                        <a href="#" class="dropdown-item" data-module="expenses"
+                            onclick="window.switchModule('expenses'); closeFeatures(); return false;">
+                            <i class="fas fa-wallet"></i>
+                            <span>Expenses</span>
+                        </a>
+                        <a href="#" class="dropdown-item" data-module="budgets"
+                            onclick="window.switchModule('budgets'); closeFeatures(); return false;">
+                            <i class="fas fa-chart-pie"></i>
+                            <span>Budgets</span>
+                        </a>
+                        <a href="#" class="dropdown-item" data-module="goals"
+                            onclick="window.switchModule('goals'); closeFeatures(); return false;">
+                            <i class="fas fa-bullseye"></i>
+                            <span>Goals</span>
+                        </a>
+                        <a href="#" class="dropdown-item" data-module="split"
+                            onclick="window.switchModule('split'); closeFeatures(); return false;">
+                            <i class="fas fa-users"></i>
+                            <span>Split Bills</span>
+                        </a>
+                        <a href="#" class="dropdown-item" data-module="notes"
+                            onclick="window.switchModule('notes'); closeFeatures(); return false;">
+                            <i class="fas fa-sticky-note"></i>
+                            <span>Notes</span>
+                        </a>
+                        <a href="#" class="dropdown-item" data-module="settings"
+                            onclick="window.switchModule('settings'); closeFeatures(); return false;">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="navbar-search" style="position: relative;">
+                <i class="fas fa-search"></i>
+                <input type="text" id="navbar-search-input" placeholder="Search tasks...">
+            </div>
+
+            <!-- Right Actions -->
+            <div class="navbar-actions">
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Email Icon -->
+                <button class="navbar-icon-btn" title="Messages" onclick="showMessages()">
+                    <i class="fas fa-envelope"></i>
+                </button>
+
+                <!-- Notifications -->
+                <button class="navbar-icon-btn" title="Notifications" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+
+                <!-- New Button -->
+                <button class="navbar-new-btn" onclick="showQuickAddModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>New</span>
+                </button>
+
+                <!-- User Avatar -->
+                <div class="navbar-user" id="user-avatar" title="Profile" onclick="window.switchModule('settings')">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Home Module -->
+            <div id="dashboard-home" class="module active">
+                <!-- Dashboard Hero Section -->
+                <div class="dashboard-hero">
+                    <h1>Dashboard</h1>
+                    <p>Plan, prioritize, and accomplish your tasks with ease.</p>
+                </div>
+
+                <!-- Row 1: Four Info Cards -->
+                <div class="dashboard-stats-row">
+                    <div class="stat-card-modern green">
+                        <div class="stat-icon-modern">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content-modern">
+                            <div class="stat-label">Total Tasks</div>
+                            <div class="stat-value-modern" id="stat-total-tasks">0</div>
+                            <div class="stat-subtitle"><i class="fas fa-arrow-up"></i> Updated</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-modern purple">
+                        <div class="stat-icon-modern">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-content-modern">
+                            <div class="stat-label">Habit Streak</div>
+                            <div class="stat-value-modern" id="stat-habit-streak">0</div>
+                            <div class="stat-subtitle">Best Streak</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-modern blue">
+                        <div class="stat-icon-modern">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content-modern">
+                            <div class="stat-label">Pending</div>
+                            <div class="stat-value-modern" id="stat-pending-tasks">0</div>
+                            <div class="stat-subtitle">Tasks Left</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-modern orange">
+                        <div class="stat-icon-modern">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-content-modern">
+                            <div class="stat-label">Expenses</div>
+                            <div class="stat-value-modern" id="stat-total-expenses">₹0</div>
+                            <div class="stat-subtitle">This Month</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Expense Overview + Focus Timer -->
+                <div class="dashboard-row-2">
+                    <!-- Expense Overview Chart (Large) -->
+                    <div class="dashboard-card-modern chart-card-large">
+                        <div class="card-header-modern">
+                            <div>
+                                <h3>Expense Overview</h3>
+                                <p class="card-subtitle">Monthly spending breakdown</p>
+                            </div>
+                            <button class="icon-btn"><i class="fas fa-ellipsis-h"></i></button>
+                        </div>
+                        <div class="chart-container-modern">
+                            <canvas id="dashboard-expense-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Focus Timer (Right) -->
+                    <div class="dashboard-card-modern timer-card-modern">
+                        <div class="card-header-modern">
+                            <h3>Focus Timer</h3>
+                        </div>
+                        <div class="timer-display-modern">
+                            <div class="timer-time">
+                                <span id="timer-minutes">25</span>:<span id="timer-seconds">00</span>
+                            </div>
+                            <div class="timer-controls-modern">
+                                <button id="timer-start" class="btn-circle-modern play">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button id="timer-reset" class="btn-circle-modern reset">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </div>
+                            <div class="timer-mode-modern">
+                                <span class="mode-active">Focus</span>
+                                <span>Short Break</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Habit Progress + Recent Tasks -->
+                <div class="dashboard-row-3">
+                    <!-- Habit Progress -->
+                    <div class="dashboard-card-modern">
+                        <div class="card-header-modern">
+                            <h3>Habit Progress</h3>
+                            <p class="card-subtitle">Today's completion</p>
+                        </div>
+                        <div class="habit-progress-content">
+                            <div class="progress-circle-container">
+                                <canvas id="dashboard-habit-chart" width="200" height="200"></canvas>
+                            </div>
+                            <div class="habit-stats-modern">
+                                <h2 id="habit-completion-rate">0%</h2>
+                                <p>Completion Rate</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Tasks -->
+                    <div class="dashboard-card-modern">
+                        <div class="card-header-modern">
+                            <h3>Recent Tasks</h3>
+                            <a href="#" onclick="switchModule('tasks')" class="see-all-link">See All</a>
+                        </div>
+                        <div id="dashboard-recent-tasks" class="task-list-modern">
+                            <div class="empty-state-modern">
+                                <i class="fas fa-tasks"></i>
+                                <p>No tasks yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 4: Advanced Analytics Section -->
+                <div class="dashboard-section-modern">
+                    <div class="section-header-modern">
+                        <div>
+                            <h2><i class="fas fa-chart-bar"></i> Advanced Analytics</h2>
+                            <p class="section-subtitle">Detailed insights into your spending patterns</p>
+                        </div>
+                        <div class="section-actions">
+                            <button onclick="refreshAnalytics()" class="btn btn-secondary btn-small">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <button onclick="exportAnalyticsCSV()" class="btn btn-secondary btn-small">
+                                <i class="fas fa-file-csv"></i> Export CSV
+                            </button>
+                            <button onclick="exportAnalyticsPDF()" class="btn btn-secondary btn-small">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Summary Cards (3 equal cards) -->
+                    <div class="analytics-cards-row">
+                        <div class="analytics-card-modern blue">
+                            <div class="analytics-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="analytics-content">
+                                <div class="analytics-label">Top Category</div>
+                                <div class="analytics-value" id="analytics-top-category">-</div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card-modern orange">
+                            <div class="analytics-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="analytics-content">
+                                <div class="analytics-label">Avg Daily</div>
+                                <div class="analytics-value" id="analytics-avg-daily">₹0</div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card-modern purple">
+                            <div class="analytics-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="analytics-content">
+                                <div class="analytics-label">Transactions</div>
+                                <div class="analytics-value" id="analytics-total-transactions">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Monthly Trends + Category Distribution -->
+                    <div class="analytics-charts-row">
+                        <!-- Monthly Trends Chart -->
+                        <div class="dashboard-card-modern">
+                            <div class="card-header-modern">
+                                <div>
+                                    <h3><i class="fas fa-chart-line"></i> Monthly Trends</h3>
+                                    <p class="card-subtitle">Last 6 months</p>
+                                </div>
+                            </div>
+                            <div class="chart-container-modern">
+                                <canvas id="monthly-trends-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Category Pie Chart -->
+                        <div class="dashboard-card-modern">
+                            <div class="card-header-modern">
+                                <div>
+                                    <h3><i class="fas fa-chart-pie"></i> Category Distribution</h3>
+                                    <p class="card-subtitle">All time</p>
+                                </div>
+                            </div>
+                            <div class="chart-container-modern">
+                                <canvas id="category-pie-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekday vs Weekend Analysis (Full Width) -->
+                    <div class="dashboard-card-modern">
+                        <div class="card-header-modern">
+                            <div>
+                                <h3><i class="fas fa-calendar-week"></i> Weekday vs Weekend Analysis</h3>
+                                <p class="card-subtitle">Spending patterns</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-modern">
+                            <canvas id="weekday-weekend-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Module -->
+            <section id="tasks-module" class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-tasks"></i> Tasks</h2>
+                    <button id="add-task-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                </div>
+
+                <div class="filters">
+                    <select id="task-category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="Study">Study</option>
+                        <option value="Assignment">Assignment</option>
+                        <option value="Project">Project</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <select id="task-status-filter">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                    </select>
+
+                    <input type="date" id="task-date-filter">
+                </div>
+
+                <div id="tasks-list" class="content-grid">
+                    <!-- Tasks will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Habits Module -->
+            <section id="habits-module" class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-calendar-check"></i> Habits</h2>
+                    <button id="add-habit-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Habit
+                    </button>
+                </div>
+
+                <div id="habits-list" class="content-grid">
+                    <!-- Habits will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Notes Module -->
+            <section id="notes-module" class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-sticky-note"></i> Notes</h2>
+                    <button id="create-note-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Note
+                    </button>
+                </div>
+
+                <!-- Filters and Search -->
+                <div class="filters" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <div class="search-bar" style="flex: 1; min-width: 250px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="notes-search" placeholder="Search notes...">
+                    </div>
+                    <select id="notes-color-filter"
+                        style="padding: 0.75rem; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-primary);">
+                        <option value="all">All Colors</option>
+                        <option value="default">Default</option>
+                        <option value="red">Red</option>
+                        <option value="orange">Orange</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="green">Green</option>
+                        <option value="blue">Blue</option>
+                        <option value="purple">Purple</option>
+                        <option value="pink">Pink</option>
+                    </select>
+                    <select id="notes-sort"
+                        style="padding: 0.75rem; background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-primary);">
+                        <option value="updated">Recently Updated</option>
+                        <option value="created">Recently Created</option>
+                        <option value="title">Title (A-Z)</option>
+                    </select>
+                </div>
+
+                <div id="notes-grid" class="content-grid"
+                    style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+                    <!-- Notes will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Expenses Module -->
+            <section id="expenses-module" class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-wallet"></i> Expenses</h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="import-expenses-btn" class="btn btn-secondary">
+                            <i class="fas fa-file-import"></i> Import CSV
+                        </button>
+                        <button id="add-expense-btn" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Expense
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <select id="expense-category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Books">Books</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <input type="month" id="expense-month-filter">
+                </div>
+
+                <div class="expense-summary">
+                    <div class="summary-card">
+                        <h3>Total Expenses</h3>
+                        <p id="total-expenses" class="amount">₹0</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="expenses-chart"></canvas>
+                </div>
+
+                <div id="expenses-list" class="content-list">
+                    <!-- Expenses will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Budgets Module -->
+            <section id="budgets-module" class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-chart-pie"></i> Budget Planner</h2>
+                    <button id="create-budget-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Budget
+                    </button>
+                </div>
+
+                <!-- Current Month Budget Overview -->
+                <div class="budget-overview-card">
+                    <div class="budget-overview-header">
+                        <h3>Current Month Budget</h3>
+                    </div>
+
+                    <div class="total-budget-progress">
+                        <div class="budget-amounts">
+                            <span>Spent: <strong id="total-spent">₹0</strong></span>
+                            <span>Budget: <strong id="total-budget-amount">₹0</strong></span>
+                        </div>
+                        <div class="budget-progress-bar-container">
+                            <div id="total-budget-progress" class="budget-progress-bar safe" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Category Limits -->
+                    <div class="category-limits-section">
+                        <h4>Category Limits</h4>
+                        <div id="category-limits-list">
+                            <!-- Category limits will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget History -->
+                <div class="budgets-history-section">
+                    <h4>Budget History</h4>
+                    <div id="budgets-history">
+                        <!-- Budget history will be rendered here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Goals Module -->
+            <section id="goals-module" class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-bullseye"></i> Savings Goals</h2>
+                    <button id="create-goal-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Goal
+                    </button>
+                </div>
+
+                <div id="goals-list">
+                    <!-- Goals will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Split Bills Module -->
+            <section id="split-module" class="module">
+                <!-- Groups View -->
+                <div id="groups-view">
+                    <div class="module-header">
+                        <h2><i class="fas fa-users"></i> Split Expenses</h2>
+                        <button id="create-group-btn" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Group
+                        </button>
+                    </div>
+                    <div id="groups-list"></div>
+                </div>
+
+                <!-- Group Detail View -->
+                <div id="group-detail-view" style="display: none;">
+                    <div class="module-header">
+                        <button id="back-to-groups-btn" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <h2 id="group-detail-name"></h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button id="add-member-btn" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i> Add Member
+                            </button>
+                            <button id="split-expense-btn" class="btn btn-primary">
+                                <i class="fas fa-receipt"></i> Split Expense
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Balances Summary -->
+                    <div class="balances-card">
+                        <h3><i class="fas fa-balance-scale"></i> Balances</h3>
+                        <div id="balances-summary">
+                            <!-- Balances will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Shared Expenses List -->
+                    <div>
+                        <h3>Shared Expenses</h3>
+                        <div id="shared-expenses-list">
+                            <!-- Shared expenses will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Module -->
+            <section id="settings-module" class="module">
+                <div class="module-header">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                </div>
+
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-palette"></i> Appearance</h3>
+                        <div class="setting-item">
+                            <label for="theme-toggle">
+                                <span>Dark Mode</span>
+                                <p class="setting-description">Toggle between light and dark theme</p>
+                            </label>
+                            <label class="switch">
+                                <input type="checkbox" id="theme-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3><i class="fas fa-user"></i> Profile</h3>
+                        <div class="setting-item">
+                            <label>Email</label>
+                            <p id="user-email" class="user-info">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-content" class="modal-content">
+            <!-- Dynamic modal content will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-indicator" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/supabaseClient.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/tasks.js"></script>
+    <script src="assets/js/habits.js"></script>
+    <script src="assets/js/notes.js"></script>
+    <script src="assets/js/expenses.js"></script>
+    <script src="assets/js/budgets.js"></script>
+    <script src="assets/js/goals.js"></script>
+    <script src="assets/js/split.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    <script src="assets/js/onboarding.js"></script>
+    <script src="assets/js/sync.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>

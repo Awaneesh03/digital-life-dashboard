@@ -1,0 +1,269 @@
+/* ===================================
+   Split Expenses & Groups Styles
+   ===================================*/
+
+/* Split Module Container */
+#split-module {
+    padding: 2rem;
+}
+
+/* Groups View */
+#groups-view {
+    display: block;
+}
+
+#group-detail-view {
+    display: none;
+}
+
+/* Groups Grid */
+#groups-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Group Card */
+.group-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.group-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--accent-primary);
+}
+
+.group-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.group-info {
+    flex: 1;
+}
+
+.group-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+}
+
+.group-info p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Group Detail View */
+.group-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.group-detail-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.back-btn {
+    background: var(--bg-tertiary);
+    border: none;
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background: var(--bg-secondary);
+}
+
+/* Balances Summary */
+.balances-card {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.balances-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.balance-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.balance-item.owes {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #ef4444;
+    color: #ef4444;
+}
+
+.balance-item.owed {
+    background: rgba(74, 222, 128, 0.1);
+    border-left: 3px solid #4ade80;
+    color: #4ade80;
+}
+
+/* Shared Expenses List */
+#shared-expenses-list {
+    margin-top: 2rem;
+}
+
+.shared-expense-item {
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.expense-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.expense-header h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.expense-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+.expense-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.expense-meta i {
+    margin-right: 0.25rem;
+}
+
+/* Expense Splits */
+.expense-splits {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.split-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.split-item.settled {
+    opacity: 0.6;
+}
+
+.btn-settle {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.btn-settle:hover {
+    background: var(--accent-hover);
+    transform: scale(1.05);
+}
+
+.settled-badge {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Split Type Selector */
+#split-inputs {
+    margin-top: 1rem;
+}
+
+/* Empty States */
+#groups-list:empty::after {
+    content: 'No groups yet. Create your first group!';
+    display: block;
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #groups-list {
+        grid-template-columns: 1fr;
+    }
+
+    .group-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .expense-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .expense-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

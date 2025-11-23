@@ -1,0 +1,9 @@
+# Vercel ignore file
+node_modules
+.DS_Store
+*.log
+.env
+.env.local
+database-setup.sql
+setup-friends-table.sql
+README.md
