@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "dev": "npx -y http-server -p 8080 -o"
+  },
   "dependencies": {
     "tesseract.js": "^6.0.1"
   }

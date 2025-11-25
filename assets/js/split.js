@@ -585,17 +585,91 @@ async function handleAddMemberSubmit(e) {
             } else {
                 throw friendError;
             }
+            closeModal();
         } else {
-            showToast(`${memberName} added to your contacts! Note: They need to create an account to actually join groups and see expenses.`, 'success');
-        }
+            // Generate invite link
+            const inviteLink = generateInviteLink(currentGroup.id, currentGroup.name);
 
-        closeModal();
+            // Show invite link modal
+            showInviteLinkModal(memberName, inviteLink);
+        }
 
     } catch (error) {
         hideLoading();
         showToast('Error adding member: ' + error.message, 'error');
         console.error('Add member error:', error);
     }
+}
+
+// Generate invite link for group
+function generateInviteLink(groupId, groupName) {
+    const baseUrl = window.location.origin;
+    const inviteUrl = `${baseUrl}?invite=${groupId}&group=${encodeURIComponent(groupName)}`;
+    return inviteUrl;
+}
+
+// Show invite link modal
+function showInviteLinkModal(memberName, inviteLink) {
+    const modalContent = `
+        <div class="modal-header">
+            <h3><i class="fas fa-share-alt"></i> Invite ${memberName}</h3>
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div style="padding: 1.5rem;">
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Share this link with ${memberName} to invite them to join the group:
+            </p>
+            
+            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; word-break: break-all;">
+                <code id="invite-link-text" style="color: var(--accent-primary); font-size: 0.9rem;">${inviteLink}</code>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button onclick="copyInviteLink('${inviteLink}')" class="btn btn-primary">
+                    <i class="fas fa-copy"></i> Copy Link
+                </button>
+                <button onclick="shareViaWhatsApp('${inviteLink}', '${memberName}')" class="btn btn-secondary">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button onclick="shareViaEmail('${inviteLink}', '${memberName}', '${currentGroup.name}')" class="btn btn-secondary">
+                    <i class="fas fa-envelope"></i> Email
+                </button>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 1rem;">
+                <i class="fas fa-info-circle"></i> ${memberName} will need to create an account and click this link to join the group.
+            </p>
+        </div>
+    `;
+
+    showModal(modalContent);
+}
+
+// Copy invite link to clipboard
+function copyInviteLink(link) {
+    navigator.clipboard.writeText(link).then(() => {
+        showToast('Invite link copied to clipboard!', 'success');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        showToast('Failed to copy link', 'error');
+    });
+}
+
+// Share via WhatsApp
+function shareViaWhatsApp(link, memberName) {
+    const message = `Hi ${memberName}! You've been invited to join our group on Digital Life Dashboard. Click here to join: ${link}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+}
+
+// Share via Email
+function shareViaEmail(link, memberName, groupName) {
+    const subject = `Invitation to join ${groupName} on Digital Life Dashboard`;
+    const body = `Hi ${memberName},\n\nYou've been invited to join the group "${groupName}" on Digital Life Dashboard.\n\nClick the link below to join:\n${link}\n\nBest regards`;
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoUrl;
 }
 
 // Initialize split expenses module
@@ -633,3 +707,6 @@ window.showSplitExpenseModal = showSplitExpenseModal;
 window.showAddMemberModal = showAddMemberModal;
 window.updateSplitInputs = updateSplitInputs;
 window.initSplitExpensesModule = initSplitExpensesModule;
+window.copyInviteLink = copyInviteLink;
+window.shareViaWhatsApp = shareViaWhatsApp;
+window.shareViaEmail = shareViaEmail;

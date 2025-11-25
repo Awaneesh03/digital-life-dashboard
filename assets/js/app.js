@@ -137,6 +137,9 @@ async function initApp() {
     // Check authentication state
     await checkAuthState();
 
+    // Check for invite link in URL
+    handleInviteLink();
+
     // Initialize navigation
     initNavigation();
 
@@ -148,6 +151,94 @@ async function initApp() {
 
     // Initialize navbar
     if (window.initNavbar) initNavbar();
+}
+
+// Handle invite link from URL
+async function handleInviteLink() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteGroupId = urlParams.get('invite');
+    const groupName = urlParams.get('group');
+
+    if (inviteGroupId) {
+        // Check if user is authenticated
+        const user = await getCurrentUser();
+
+        if (!user) {
+            // Store invite info and redirect to login
+            localStorage.setItem('pendingInvite', JSON.stringify({ groupId: inviteGroupId, groupName }));
+            showToast('Please log in to accept the group invite', 'info');
+            return;
+        }
+
+        // User is authenticated, process invite
+        await processGroupInvite(inviteGroupId, groupName);
+
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+        // Check for pending invite after login
+        const pendingInvite = localStorage.getItem('pendingInvite');
+        if (pendingInvite) {
+            const { groupId, groupName } = JSON.parse(pendingInvite);
+            localStorage.removeItem('pendingInvite');
+
+            const user = await getCurrentUser();
+            if (user) {
+                await processGroupInvite(groupId, groupName);
+            }
+        }
+    }
+}
+
+// Process group invite
+async function processGroupInvite(groupId, groupName) {
+    try {
+        const user = await getCurrentUser();
+        if (!user) return;
+
+        showLoading();
+
+        // Check if user is already a member
+        const { data: existingMember, error: checkError } = await supabase
+            .from('group_members')
+            .select('*')
+            .eq('group_id', groupId)
+            .eq('user_id', user.id)
+            .single();
+
+        if (existingMember) {
+            hideLoading();
+            showToast(`You're already a member of "${groupName}"!`, 'info');
+            if (window.switchModule) switchModule('split');
+            return;
+        }
+
+        // Add user to group
+        const { error: insertError } = await supabase
+            .from('group_members')
+            .insert([{
+                group_id: groupId,
+                user_id: user.id
+            }]);
+
+        hideLoading();
+
+        if (insertError) {
+            console.error('Error joining group:', insertError);
+            showToast('Error joining group: ' + insertError.message, 'error');
+        } else {
+            showToast(`Successfully joined "${groupName}"! 🎉`, 'success');
+            // Switch to split expenses module
+            if (window.switchModule) {
+                setTimeout(() => switchModule('split'), 1000);
+            }
+        }
+
+    } catch (error) {
+        hideLoading();
+        console.error('Error processing invite:', error);
+        showToast('Error processing invite: ' + error.message, 'error');
+    }
 }
 
 // Run when DOM is loaded
